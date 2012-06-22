@@ -1,6 +1,7 @@
 package com.xap4o {
 import flash.utils.ByteArray;
 import flash.utils.Dictionary;
+import flash.utils.describeType;
 import flash.utils.getQualifiedClassName;
 
 public class EBONSerializer {
@@ -17,7 +18,7 @@ public class EBONSerializer {
         var sizePos:int = buf.position
         buf.writeInt(0)//to reserve space for actual fieldsCount value
         var fieldsCount:int = 0
-        var fieldsList:XMLList = flash.utils.describeType(doc)..variable
+        var fieldsList:XMLList = describeType(doc)..variable
         for(var i:int; i < fieldsList.length(); i++){
             //TODO: handle [Skip] annotation
             var fieldName:String = fieldsList[i].@name;
@@ -59,19 +60,19 @@ public class EBONSerializer {
             writeByteArray(ByteArray(value))
         } else if (value is Array) {
             buf.writeByte(EBON.C_LIST)
-            writeList(Array(value))
+            writeList(value as Array)
         } else if (value is Dictionary) {
-            buf.writeByte(EBON.C_MAP);
-            writeMap(Dictionary(value));
+            buf.writeByte(EBON.C_MAP)
+            writeMap(Dictionary(value))
         } else {
-            buf.writeByte(EBON.C_OBJECT);
-            writeObject(value);
+            buf.writeByte(EBON.C_OBJECT)
+            writeObject(value)
         }
     }
 
     private function writeMap(dict:Dictionary):void {
         var sizePos:int = buf.position
-        buf.writeInt(0);
+        buf.writeInt(0)
         var size:int = 0
         for (var key:* in dict) {
             writeValue(key)

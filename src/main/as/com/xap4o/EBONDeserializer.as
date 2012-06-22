@@ -25,19 +25,19 @@ public class EBONDeserializer {
             case EBON.C_DOUBLE:
                 return buf.readDouble()
             case EBON.C_STRING:
-                return readString();
+                return readString()
             case EBON.C_BINARY:
-                return readByteArray();
+                return readByteArray()
             case EBON.C_LIST:
-                return readList();
+                return readList()
             case EBON.C_MAP:
-                return readMap();
+                return readMap()
             case EBON.C_OBJECT:
-                return readObject();
+                return readObject()
             case EBON.C_ENUM:
-                return readEnum();
+                return readEnum()
         }
-        throw new EBONException("Unsupported type: " + valType);
+        throw new EBONException("Unsupported type: " + valType)
     }
 
     private function readEnum():String {
