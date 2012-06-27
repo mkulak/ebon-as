@@ -1,6 +1,5 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.xap4o</groupId>
@@ -8,16 +7,24 @@
     <version>0.5</version>
 
     <packaging>swc</packaging>
-
     <build>
         <sourceDirectory>src/main/as</sourceDirectory>
+        <testSourceDirectory>src/test/as</testSourceDirectory>
         <plugins>
             <plugin>
                 <groupId>org.sonatype.flexmojos</groupId>
                 <artifactId>flexmojos-maven-plugin</artifactId>
-                <version>3.0.0</version>
+                <version>${flex-mojos.version}</version>
                 <extensions>true</extensions>
                 <configuration>
+                    <configurationReport>true</configurationReport>
+                    <testRunner>
+                      <launcher>
+                        <flashplayerCommand>${flashPlayer.command}</flashplayerCommand>
+                      </launcher>
+                    </testRunner>
+                    <ignoreVersionIssues>true</ignoreVersionIssues>
+                    <storepass/>
                     <targetPlayer>10.0.0</targetPlayer>
                 </configuration>
             </plugin>
@@ -41,21 +48,71 @@
         <dependency>
             <groupId>com.adobe.flex.framework</groupId>
             <artifactId>flex-framework</artifactId>
-            <version>3.3.0.4852</version>
+            <version>${flex.sdk.version}</version>
             <type>pom</type>
             <exclusions>
                 <exclusion>
                     <groupId>com.adobe.flex.framework</groupId>
                     <artifactId>playerglobal</artifactId>
                 </exclusion>
+                <exclusion>
+                    <groupId>com.adobe.flex</groupId>
+                    <artifactId>compiler</artifactId>
+                </exclusion>
             </exclusions>
         </dependency>
         <dependency>
             <groupId>com.adobe.flex.framework</groupId>
             <artifactId>playerglobal</artifactId>
-            <version>3.3.0.4852</version>
+            <version>${flex.sdk.version}</version>
             <classifier>10</classifier>
             <type>swc</type>
         </dependency>
+        <dependency>
+           <groupId>com.adobe.flex</groupId>
+           <artifactId>compiler</artifactId>
+           <version>${flex.sdk.version}</version>
+           <type>pom</type>
+       </dependency>
+        <dependency>
+            <groupId>com.adobe.flexunit</groupId>
+            <artifactId>flexunit</artifactId>
+            <version>0.90</version>
+            <type>swc</type>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.sonatype.flexmojos</groupId>
+            <artifactId>flexmojos-unittest-support</artifactId>
+            <version>${flex-mojos.version}</version>
+            <type>swc</type>
+            <scope>test</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.adobe.flex.framework</groupId>
+                    <artifactId>framework</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>com.adobe.flex</groupId>
+                    <artifactId>compiler</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>com.adobe.flex.framework</groupId>
+                    <artifactId>playerglobal</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>com.adobe.flexunit</groupId>
+                    <artifactId>flexunit</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
     </dependencies>
+
+    <properties>
+        <flex-mojos.version>3.8</flex-mojos.version>
+        <flex.sdk.version>3.3.0.4852</flex.sdk.version>
+        <flex.flashPlayer.command>/opt/flash_standalone/flashplayer</flex.flashPlayer.command>
+        <flashPlayer.command>/opt/flash_standalone/flashplayer</flashPlayer.command>
+    </properties>
 </project>
