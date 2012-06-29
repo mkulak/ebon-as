@@ -60,5 +60,24 @@ public class BasicTest extends TestCase {
             assertEquals(a, b)
         }
     }
+
+    public function testCustomClass():void {
+        var f:Foo = new Foo()
+        f.a = 2
+        f.bar = Number.MAX_VALUE
+        f.c = true
+        f.stringField = "some string"
+        var newF:Foo = EBON.deserialize(EBON.serialize(f))
+        assertEquals(f.a, newF.a)
+        assertEquals(f.bar, newF.bar)
+        assertEquals(f.c, newF.c)
+        assertEquals(f.stringField, newF.stringField)
+    }
+
+    public function testInnerObjects():void {
+        var b1:Bar = new Bar(int.MAX_VALUE, Number.MIN_VALUE + 10, new Foo(), new Bar(51, -0.1, null, null))
+        var b2:Bar = EBON.deserialize(EBON.serialize(b1))
+        assertTrue(b1.equals(b2))
+    }
 }
 }
