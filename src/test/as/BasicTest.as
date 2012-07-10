@@ -79,5 +79,18 @@ public class BasicTest extends TestCase {
         var b2:Bar = EBON.deserialize(EBON.serialize(b1))
         assertTrue(b1.equals(b2))
     }
+
+    public function testLoops():void {
+        var child1:Node = new Node(1, [])
+        var child2:Node = new Node(2, [])
+        var parent:Node = new Node(0, [child1, child2])
+        var newParent:Node = EBON.deserialize(EBON.serialize(parent))
+        assertEquals(parent.value, newParent.value)
+        assertEquals(parent.children.length, newParent.children.length)
+        assertEquals(parent.children[0].value, newParent.children[0].value)
+        assertEquals(parent.children[1].value, newParent.children[1].value)
+        assertEquals(newParent, parent.children[0].parent)
+        assertEquals(newParent, parent.children[1].parent)
+    }
 }
 }
