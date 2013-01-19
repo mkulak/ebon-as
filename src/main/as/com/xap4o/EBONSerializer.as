@@ -62,7 +62,8 @@ public class EBONSerializer {
     private function writeObject(doc:Object):void {
         buf.writeByte(EBON.C_OBJECT)
         buf.writeInt(saveRef(doc))
-        writeString(getQualifiedClassName(doc))
+//        writeString(getQualifiedClassName(doc))
+        writeString(getQualifiedClassName(doc).replace("::", "."))
         var sizePos:int = buf.position
         buf.writeInt(0)//to reserve space for actual fieldsCount value
         var fieldsCount:int = 0
