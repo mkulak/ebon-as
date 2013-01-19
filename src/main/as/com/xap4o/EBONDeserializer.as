@@ -5,6 +5,7 @@ import flash.utils.getDefinitionByName;
 
 public class EBONDeserializer {
     private var buf:ByteArray
+    private var refMap:Dictionary = new Dictionary() //<int, Object>
 
     public function deserialize(bytes:ByteArray):* {
         buf = bytes
@@ -25,7 +26,7 @@ public class EBONDeserializer {
             case EBON.C_DOUBLE:
                 return buf.readDouble()
             case EBON.C_STRING:
-                return readString()
+                return readStringImpl()
             case EBON.C_BINARY:
                 return readByteArray()
             case EBON.C_LIST:
@@ -36,8 +37,19 @@ public class EBONDeserializer {
                 return readObject()
             case EBON.C_ENUM:
                 return readEnum()
+            case EBON.C_REF:
+                return readRef()
         }
         throw new EBONException("Unsupported type: " + valType)
+    }
+
+    private function readRef():* {
+        var ref:int = buf.readInt()
+        var res:* = refMap[ref]
+        if (res == null) {
+            throw new EBONException("Malformed ref " + ref)
+        }
+        return res
     }
 
     private function readEnum():String {
@@ -47,10 +59,12 @@ public class EBONDeserializer {
     }
 
     private function readObject():Object {
+        var ref:int = buf.readInt()
         var className:String = readString()
         var fieldsCount:int = buf.readInt()
         var clazz:Class = getDefinitionByName(className) as Class
         var res:Object = new clazz()
+        refMap[ref] = res
         for (var i:int = 0; i < fieldsCount; i++) {
             var name:String = readString()
             var value:* = readValue()
@@ -60,20 +74,39 @@ public class EBONDeserializer {
     }
 
     private function readString():String {
+        var valType:int = buf.readByte()
+        switch (valType) {
+            case EBON.C_STRING:
+                return readStringImpl()
+            case EBON.C_REF:
+                return String(readRef())
+            default:
+                throw new EBONException("Expected string, found " + valType);
+        }
+    }
+
+    private function readStringImpl():String {
+        var ref:int = buf.readInt()
         var size:int = buf.readInt()
-        return buf.readUTFBytes(size)
+        var res:String = buf.readUTFBytes(size);
+        refMap[ref] = res
+        return res
     }
 
     private function readByteArray():ByteArray {
+        var ref:int = buf.readInt()
         var res:ByteArray = new ByteArray()
         var size:int = buf.readInt()
         buf.readBytes(res, 0, size)
+        refMap[ref] = res
         return res
     }
 
     private function readMap():Dictionary {
+        var ref:int = buf.readInt()
         var size:int = buf.readInt()
         var res:Dictionary = new Dictionary()
+        refMap[ref] = res
         for (var i:int = 0; i < size; i++) {
             var key:* = readValue()
             res[key] = readValue()
@@ -82,8 +115,10 @@ public class EBONDeserializer {
     }
 
     private function readList():Array {
+        var ref:int = buf.readInt()
         var size:int = buf.readInt()
         var res:Array = []
+        refMap[ref] = res
         for (var i:int = 0; i < size; i++) {
             res.push(readValue())
         }

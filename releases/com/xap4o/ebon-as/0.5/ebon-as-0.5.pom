@@ -114,10 +114,11 @@
         </repository>
     </distributionManagement>
 
+
     <properties>
         <flex-mojos.version>3.8</flex-mojos.version>
         <flex.sdk.version>3.3.0.4852</flex.sdk.version>
-        <flex.flashPlayer.command>/opt/flash_standalone/flashplayer</flex.flashPlayer.command>
-        <flashPlayer.command>/opt/flash_standalone/flashplayer</flashPlayer.command>
+        <flex.flashPlayer.command>c:/downloads/flashplayer_11_sa_debug.exe</flex.flashPlayer.command>
+        <flashPlayer.command>c:/downloads/flashplayer_11_sa_debug.exe</flashPlayer.command>
     </properties>
 </project>

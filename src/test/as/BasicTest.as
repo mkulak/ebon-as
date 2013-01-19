@@ -89,8 +89,8 @@ public class BasicTest extends TestCase {
         assertEquals(parent.children.length, newParent.children.length)
         assertEquals(parent.children[0].value, newParent.children[0].value)
         assertEquals(parent.children[1].value, newParent.children[1].value)
-        assertEquals(newParent, parent.children[0].parent)
-        assertEquals(newParent, parent.children[1].parent)
+        assertEquals(newParent, newParent.children[0].parent)
+        assertEquals(newParent, newParent.children[1].parent)
     }
 }
 }

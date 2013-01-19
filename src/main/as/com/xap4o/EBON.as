@@ -1,5 +1,5 @@
 package com.xap4o {
-import flash.utils.ByteArray
+import flash.utils.ByteArray;
 
 public class EBON {
     public static const C_NULL:int = 0
@@ -13,6 +13,7 @@ public class EBON {
     public static const C_BINARY:int = 8
     public static const C_MAP:int = 9
     public static const C_ENUM:int = 10
+    public static const C_REF:int = 11
 
     public static function serialize(value:*):ByteArray {
         return new EBONSerializer().serialize(value)
